@@ -23,9 +23,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('files', function (Blueprint $table) {
-            $table->dropForeign(['user_id']); // Remove a chave estrangeira
-            $table->dropColumn('user_id');
-            $table->dropColumn('file_path');
+            if (Schema::hasColumn('files', 'user_id')) {
+                $table->dropForeign(['user_id']); // Remove apenas se a coluna existir
+                $table->dropColumn('user_id');
+            }
+            if (Schema::hasColumn('files', 'file_path')) {
+                $table->dropColumn('file_path'); // Remove apenas se a coluna existir
+            }
         });
     }
 };
